@@ -1,0 +1,397 @@
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Typing Speed Test - Test Your Typing Speed</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a; /* dark navy */
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+    ::selection {
+      background-color: #2563eb;
+      color: white;
+    }
+    /* Background gradient shapes */
+    .bg-shape-1, .bg-shape-2, .bg-shape-3 {
+      position: fixed;
+      filter: blur(120px);
+      opacity: 0.6;
+      z-index: -1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      border-radius: 50%;
+      transform-origin: center;
+    }
+    .bg-shape-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #ff6ec4 0%, #7873f5 100%);
+      top: -100px;
+      left: -100px;
+      animation: float1 10s ease-in-out infinite;
+    }
+    .bg-shape-2 {
+      width: 600px;
+      height: 600px;
+      background: linear-gradient(45deg, #42e695 0%, #3bb2b8 100%);
+      bottom: -200px;
+      right: -150px;
+      animation: float2 12s ease-in-out infinite;
+    }
+    .bg-shape-3 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(225deg, #fbc7a4 0%, #fe6b8b 100%);
+      top: 30%;
+      right: 40%;
+      animation: float3 15s ease-in-out infinite;
+    }
+    @keyframes float1 {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(20px) translateX(20px) scale(1.1); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(-25px) translateX(-15px) scale(1.05); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+      50% { transform: translateY(15px) translateX(-20px) scale(1.1); }
+    }
+    /* Scrollbar styling for dark background */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1e293b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #4f46e5;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative text-gray-100">
+  <div aria-hidden="true" class="bg-shape-1"></div>
+  <div aria-hidden="true" class="bg-shape-2"></div>
+  <div aria-hidden="true" class="bg-shape-3"></div>
+
+  <header class="bg-transparent">
+    <div class="max-w-4xl mx-auto px-4 py-6 flex flex-col items-center justify-center space-y-4">
+      <img
+        src="https://pbs.twimg.com/profile_images/1927690030455341057/pAFgpio-_400x400.jpg"
+        alt="Logo of a stylized blue and white letter E with a futuristic design, circular background"
+        class="w-32 h-32 rounded-full shadow-lg object-cover"
+        loading="lazy"
+      />
+      <h1 class="text-4xl font-extrabold flex items-center gap-3 text-white drop-shadow-lg select-none">
+        <i class="fas fa-keyboard text-indigo-400"></i> Typing Speed Test
+      </h1>
+      <button
+        id="btn-reset-leaderboard"
+        class="bg-red-600 hover:bg-red-700 transition rounded px-4 py-2 text-sm flex items-center gap-2 shadow-lg"
+        title="Reset Local Leaderboard"
+      >
+        <i class="fas fa-trash-alt"></i> Reset Leaderboard
+      </button>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto px-4 mt-4 mb-6 text-center text-indigo-300 font-mono font-semibold select-none tracking-wide">
+    2025 @Ziccoputin
+  </div>
+
+  <main class="flex-grow max-w-4xl mx-auto px-4 py-10 w-full">
+    <section class="bg-gradient-to-br from-indigo-900/80 via-blue-900/70 to-indigo-900/80 rounded-3xl shadow-2xl p-8 mb-12 backdrop-blur-md border border-indigo-700/50">
+      <h2 class="text-3xl font-bold mb-6 text-center text-white drop-shadow-md">
+        Test Your Typing Speed
+      </h2>
+      <p
+        id="text-to-type"
+        class="text-indigo-200 text-lg leading-relaxed border border-indigo-600 rounded-lg p-6 mb-8 select-text min-h-[6rem] font-mono tracking-wide shadow-inner bg-indigo-900/40"
+        aria-label="Text to type"
+      >
+        Loading text...
+      </p>
+      <textarea
+        id="input-typing"
+        rows="5"
+        class="w-full border border-indigo-600 rounded-lg p-4 text-lg resize-none focus:outline-none focus:ring-4 focus:ring-indigo-500 bg-indigo-900/70 text-white font-mono tracking-wide shadow-lg placeholder-indigo-400"
+        placeholder="Start typing here..."
+        aria-label="Typing area"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        disabled
+      ></textarea>
+      <div
+        id="stats"
+        class="mt-6 flex flex-wrap justify-center gap-10 text-indigo-300 font-semibold text-xl"
+        aria-live="polite"
+      >
+        <div>
+          <span>WPM:</span> <span id="wpm">0</span>
+        </div>
+        <div>
+          <span>Errors:</span> <span id="errors">0</span>
+        </div>
+        <div>
+          <span>Time:</span> <span id="time">15</span> seconds
+        </div>
+      </div>
+      <div class="mt-8 flex justify-center gap-6">
+        <button
+          id="btn-start"
+          class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-8 py-3 rounded-full shadow-lg transition shadow-indigo-700/50"
+          aria-label="Start typing test"
+        >
+          Start Test
+        </button>
+        <button
+          id="btn-reset"
+          class="bg-indigo-300 hover:bg-indigo-400 text-indigo-900 font-bold px-8 py-3 rounded-full shadow-lg transition"
+          aria-label="Reset typing test"
+          disabled
+        >
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <section class="bg-gradient-to-br from-indigo-900/80 via-blue-900/70 to-indigo-900/80 rounded-3xl shadow-2xl p-8 backdrop-blur-md border border-indigo-700/50">
+      <h2 class="text-3xl font-bold mb-6 text-center text-white drop-shadow-md">
+        Local Leaderboard
+      </h2>
+      <div class="overflow-x-auto rounded-lg shadow-inner border border-indigo-600 bg-indigo-900/50">
+        <table class="w-full text-left border-collapse text-indigo-200 font-mono">
+          <thead>
+            <tr class="bg-indigo-700/90">
+              <th class="py-3 px-6 rounded-tl-3xl">Rank</th>
+              <th class="py-3 px-6">Name</th>
+              <th class="py-3 px-6">WPM</th>
+              <th class="py-3 px-6 rounded-tr-3xl">Errors</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-body" class="divide-y divide-indigo-700/70">
+            <tr>
+              <td colspan="4" class="text-center py-6 text-indigo-400">
+                No data yet.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const TEST_DURATION = 15; // seconds
+
+      const texts = [
+        "Programming is the art of writing code that can be understood by computers and humans.",
+        "Good typing speed can significantly increase work productivity.",
+        "Regular practice is the key to improving typing speed and accuracy.",
+        "Remember to always maintain proper posture while typing to avoid fatigue.",
+        "Technology keeps evolving, and fast typing skills are an important asset.",
+        "By practicing typing, you can reduce errors and improve focus at work.",
+        "This Typing Speed Test helps you measure your typing skills within a set time.",
+        "The local leaderboard stores your best results to motivate improvement.",
+        "Typing errors are normal; what matters is how you correct them.",
+        "Touch typing with all ten fingers is the most efficient and recommended technique.",
+        "Use keyboard shortcuts to speed up your work on the computer.",
+        "Don't rush when typing; focus on accuracy first.",
+        "Reading the text carefully before typing can reduce mistakes.",
+        "Take regular breaks during long typing sessions to protect your eyes and hands.",
+        "AI technology can assist in learning typing by providing real-time feedback."
+      ];
+
+      const textToTypeEl = document.getElementById("text-to-type");
+      const inputTypingEl = document.getElementById("input-typing");
+      const wpmEl = document.getElementById("wpm");
+      const errorsEl = document.getElementById("errors");
+      const timeEl = document.getElementById("time");
+      const btnStart = document.getElementById("btn-start");
+      const btnReset = document.getElementById("btn-reset");
+      const leaderboardBody = document.getElementById("leaderboard-body");
+      const btnResetLeaderboard = document.getElementById("btn-reset-leaderboard");
+
+      let currentText = "";
+      let timer = null;
+      let timeLeft = TEST_DURATION;
+      let started = false;
+      let errors = 0;
+      let totalTyped = 0;
+      let startTime = null;
+
+      function getRandomText() {
+        const idx = Math.floor(Math.random() * texts.length);
+        return texts[idx];
+      }
+
+      function resetTest() {
+        clearInterval(timer);
+        timeLeft = TEST_DURATION;
+        timeEl.textContent = timeLeft;
+        errors = 0;
+        totalTyped = 0;
+        wpmEl.textContent = 0;
+        errorsEl.textContent = 0;
+        inputTypingEl.value = "";
+        inputTypingEl.disabled = true;
+        btnStart.disabled = false;
+        btnReset.disabled = true;
+        started = false;
+        startTime = null;
+        currentText = getRandomText();
+        textToTypeEl.textContent = currentText;
+      }
+
+      function calculateWPM() {
+        const minutes = (TEST_DURATION - timeLeft) / 60;
+        if (minutes === 0) return 0;
+        // WPM = (total typed chars / 5) / minutes
+        return Math.round((totalTyped / 5) / minutes);
+      }
+
+      function updateLeaderboard(name, wpm, errors) {
+        let leaderboard = JSON.parse(localStorage.getItem("typingLeaderboard")) || [];
+        leaderboard.push({ name, wpm, errors });
+        // Sort descending by WPM, then ascending by errors
+        leaderboard.sort((a, b) => {
+          if (b.wpm === a.wpm) return a.errors - b.errors;
+          return b.wpm - a.wpm;
+        });
+        // Keep top 10
+        leaderboard = leaderboard.slice(0, 10);
+        localStorage.setItem("typingLeaderboard", JSON.stringify(leaderboard));
+        renderLeaderboard();
+      }
+
+      function renderLeaderboard() {
+        let leaderboard = JSON.parse(localStorage.getItem("typingLeaderboard")) || [];
+        if (leaderboard.length === 0) {
+          leaderboardBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="text-center py-6 text-indigo-400">
+                No data yet.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+        leaderboardBody.innerHTML = leaderboard
+          .map(
+            (entry, i) => `
+            <tr class="hover:bg-indigo-800/50 transition-colors">
+              <td class="py-3 px-6 font-semibold">${i + 1}</td>
+              <td class="py-3 px-6">${escapeHtml(entry.name)}</td>
+              <td class="py-3 px-6">${entry.wpm}</td>
+              <td class="py-3 px-6">${entry.errors}</td>
+            </tr>
+          `
+          )
+          .join("");
+      }
+
+      function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, function (m) {
+          return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          }[m];
+        });
+      }
+
+      function startTimer() {
+        timer = setInterval(() => {
+          timeLeft--;
+          timeEl.textContent = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            inputTypingEl.disabled = true;
+            btnStart.disabled = false;
+            btnReset.disabled = true;
+            started = false;
+            const wpm = calculateWPM();
+            wpmEl.textContent = wpm;
+            alert(
+              `Time's up!\nYour typing speed: ${wpm} WPM\nErrors: ${errors}`
+            );
+            const name = prompt("Enter your name for the leaderboard:", "Anonymous");
+            if (name !== null && name.trim() !== "") {
+              updateLeaderboard(name.trim(), wpm, errors);
+            }
+          }
+        }, 1000);
+      }
+
+      function checkInput() {
+        const input = inputTypingEl.value;
+        totalTyped = input.length;
+        errors = 0;
+        for (let i = 0; i < input.length; i++) {
+          if (input[i] !== currentText[i]) {
+            errors++;
+          }
+        }
+        errorsEl.textContent = errors;
+        wpmEl.textContent = calculateWPM();
+      }
+
+      btnStart.addEventListener("click", () => {
+        resetTest();
+        inputTypingEl.disabled = false;
+        inputTypingEl.focus();
+        btnStart.disabled = true;
+        btnReset.disabled = false;
+        started = true;
+        startTime = Date.now();
+        startTimer();
+      });
+
+      btnReset.addEventListener("click", () => {
+        resetTest();
+      });
+
+      inputTypingEl.addEventListener("input", () => {
+        if (!started) return;
+        checkInput();
+      });
+
+      btnResetLeaderboard.addEventListener("click", () => {
+        if (
+          confirm(
+            "Are you sure you want to delete all local leaderboard data? This action cannot be undone."
+          )
+        ) {
+          localStorage.removeItem("typingLeaderboard");
+          renderLeaderboard();
+        }
+      });
+
+      // Initialize
+      resetTest();
+      renderLeaderboard();
+    })();
+  </script>
+</body>
+</html>
